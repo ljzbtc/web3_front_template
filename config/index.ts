@@ -2,7 +2,7 @@ import { sepolia, mainnet } from "wagmi/chains";
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
 
 
-export const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? ""
+export const projectId = "testesttestest"
 // if (!projectId) throw new Error('Project ID is not defined')
 
 const metadata = {
