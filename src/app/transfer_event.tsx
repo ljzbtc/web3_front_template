@@ -5,6 +5,15 @@ import { createPublicClient, http } from 'viem';
 import { mainnet } from 'viem/chains';
 import { parseAbiItem } from 'viem';
 
+// 类型声明
+type TransferEvent = {
+  blockNumber: number;
+  txHash: string;
+  from: string;
+  amount: string;
+  to: string;
+};
+
 const publicClient = createPublicClient({
   chain: mainnet,
   transport: http("https://eth-mainnet.g.alchemy.com/v2/seOLlSZG2Gi5ZuxZHs9xNlpafdax4u-J")
@@ -13,7 +22,7 @@ const publicClient = createPublicClient({
 const USDT_ADDRESS = '0xdAC17F958D2ee523a2206206994597C13D831ec7';
 
 const TransferEvents = () => {
-  const [transfers, setTransfers] = useState([]);
+  const [transfers, setTransfers] = useState<TransferEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -29,15 +38,21 @@ const TransferEvents = () => {
           toBlock: block_end
         });
 
-        const formatTransferData = (transferEvents) => {
+        const formatTransferData = (transferEvents: any[]): TransferEvent[] => {
           return transferEvents.map(event => {
             const amount = Number(event.args.value) / 1e6;
             const from = `${event.args.from.slice(0, 10)}...${event.args.from.slice(-10)}`;
             const to = `${event.args.to.slice(0, 10)}...${event.args.to.slice(-10)}`;
             const txHash = `${event.transactionHash.slice(0, 7)}...${event.transactionHash.slice(-7)}`;
-            const blockNumber = event.blockNumber;
+            const blockNumber = Number(event.blockNumber);
             
-            return `在 ${blockNumber} 区块 ${txHash} 交易中从 ${from} 转账 ${amount.toFixed(5)} USDT 到 ${to}`;
+            return {
+              blockNumber,
+              txHash,
+              from,
+              amount: amount.toFixed(5),
+              to
+            };
           });
         };
 
@@ -64,13 +79,34 @@ const TransferEvents = () => {
       {loading ? (
         <p>Loading...</p>
       ) : (
-        <ul>
-          {transfers.length > 0 ? (
-            transfers.map((transfer, index) => <li key={index}>{transfer}</li>)
-          ) : (
-            <p>No transfer events found.</p>
-          )}
-        </ul>
+        <table>
+          <thead>
+            <tr>
+              <th>Block Number</th>
+              <th>Transaction Hash</th>
+              <th>From</th>
+              <th>Amount (USDT)</th>
+              <th>To</th>
+            </tr>
+          </thead>
+          <tbody>
+            {transfers.length > 0 ? (
+              transfers.map((transfer, index) => (
+                <tr key={index}>
+                  <td>{transfer.blockNumber}</td>
+                  <td>{transfer.txHash}</td>
+                  <td>{transfer.from}</td>
+                  <td>{transfer.amount}</td>
+                  <td>{transfer.to}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5}>No transfer events found.</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       )}
     </div>
   );
