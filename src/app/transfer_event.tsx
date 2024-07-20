@@ -67,47 +67,49 @@ const TransferEvents = () => {
 
     fetchTransfers();
 
-    const intervalId = setInterval(fetchTransfers, 10000); // 每5秒查询一次
+    const intervalId = setInterval(fetchTransfers, 10000); // 每10秒查询一次
 
     // 组件卸载时清除定时器
     return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <div>
-      <h1>USDT Transfer Events in Current Block</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <table>
-          <thead>
-            <tr>
-              <th>Block Number</th>
-              <th>Transaction Hash</th>
-              <th>From</th>
-              <th>Amount (USDT)</th>
-              <th>To</th>
-            </tr>
-          </thead>
-          <tbody>
-            {transfers.length > 0 ? (
-              transfers.map((transfer, index) => (
-                <tr key={index}>
-                  <td>{transfer.blockNumber}</td>
-                  <td>{transfer.txHash}</td>
-                  <td>{transfer.from}</td>
-                  <td>{transfer.amount}</td>
-                  <td>{transfer.to}</td>
-                </tr>
-              ))
-            ) : (
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      <div className="bg-white p-10 rounded shadow-lg min-w-full max-w-4xl">
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">USDT Transfer Events in Current Block</h1>
+        {loading ? (
+          <p>No transfer events found.</p>
+        ) : (
+          <table className="min-w-full bg-white border border-gray-200">
+            <thead>
               <tr>
-                <td colSpan={5}>No transfer events found.</td>
+                <th className="py-2 px-4 border-b">Block Number</th>
+                <th className="py-2 px-4 border-b">Transaction Hash</th>
+                <th className="py-2 px-4 border-b">From</th>
+                <th className="py-2 px-4 border-b">Amount (USDT)</th>
+                <th className="py-2 px-4 border-b">To</th>
               </tr>
-            )}
-          </tbody>
-        </table>
-      )}
+            </thead>
+            <tbody>
+              {transfers.length > 0 ? (
+                transfers.map((transfer, index) => (
+                  <tr key={index} className="even:bg-gray-100">
+                    <td className="py-2 px-4 border-b">{transfer.blockNumber}</td>
+                    <td className="py-2 px-4 border-b">{transfer.txHash}</td>
+                    <td className="py-2 px-4 border-b">{transfer.from}</td>
+                    <td className="py-2 px-4 border-b">{transfer.amount}</td>
+                    <td className="py-2 px-4 border-b">{transfer.to}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td className="py-2 px-4 border-b text-center" colSpan={5}>No transfer events found.</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 };

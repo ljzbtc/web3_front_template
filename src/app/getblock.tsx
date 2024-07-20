@@ -32,8 +32,11 @@ const BlockHeight = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Current Block Height: {blockHeight}</h1>
+    <div className="flex items-center justify-center  bg-gray-100">
+      <div className="bg-white p-8 rounded shadow-lg">
+        <h1 className="text-2xl font-bold text-gray-900">Current Block Height:</h1>
+        <p className="text-xl text-green-600 mt-4">{blockHeight}</p>
+      </div>
     </div>
   );
 };

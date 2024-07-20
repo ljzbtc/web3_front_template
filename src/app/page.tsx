@@ -7,10 +7,13 @@ export default function Home() {
 
 	return (
 		<div>
-
-			<h1 className="text-3xl font-bold underline">Block info</h1>
-			<BlockHeight />
 			<ConnectButton />
+
+			{/* <h1 className="text-3xl font-bold underline">Block info</h1> */}
+			<BlockHeight />
+			<hr></hr>
+			<hr></hr>
+			
 			<TransferEvents />
 			
 		</div>
